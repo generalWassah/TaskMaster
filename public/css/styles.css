@@ -11,6 +11,15 @@ h1 {
     color: #007BFF;
 }
 
+h2 {
+    margin: 20px;
+}
+
+#taskM {
+    font-size: 30px;
+    color: #f9f8f9;
+}
+
 a {
     color: green;
 }
@@ -22,36 +31,103 @@ a {
     box-shadow: 0 2px 10px rgba(105, 104, 104, 0.3);
 }
 
-form {
+#loginForm,
+#registerForm {
     display: flex;
     flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: center;
     align-items: center;
-    gap: 10px;
-    padding: 10px;
-    margin-top: 20px;
+    gap: 20px;
+}
+
+.taskCon {
+    display: inline-block;
+    box-shadow: 0 2px 10px rgba(105, 104, 104, 0.3);
+}
+
+.taskCon form {
+    width: 355px;
 }
 
 input {
-    display: block;
-    margin: 10px;
+    width: 100%;
+    padding: 8px;
+}
+
+#titleDate,
+#priorityTaskBtn {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+#createTaskForm {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+}
+
+#createTaskForm div {
     padding: 10px;
     width: 100%;
-    max-width: 300px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+}
+
+textarea {
+    padding: 8px;
+    resize: none;
+    height: 115px;
+    width: 100%;
+}
+
+.deleteBtn {
+    background-color: orange;
+    color: white;
+}
+
+button:not(#logoutBtn):not(.deleteBtn) {
+    background-color: #007BFF;
+    color: white;
 }
 
 button {
-    padding: 9px 15px;
-    color: white;
-    background-color: #007BFF;
+    font-weight: bold;
     border: none;
-    border-radius: 4px;
     cursor: pointer;
+    border-radius: 5px;
 }
 
 button:hover {
-    background-color: #0056b3;
+    border: 2px solid purple;
+    border-radius: 8px;
+}
+
+a {
+    color: lightgreen;
+}
+
+#taskList ul {
+    list-style: none;
+    padding: 0;
+}
+
+#tasks li {
+    background: white;
+    margin: 10px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    text-align: left;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+button {
+    padding: 10px 20px;
+    margin-top: 10px;
 }
 
 #tasks {

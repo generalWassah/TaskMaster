@@ -3,6 +3,12 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const cors = require('cors');
 
+/*
+const crypto = require('crypto');
+const secret = crypto.randomBytes(64).toString('hex');
+console.log(secret);
+*/
+
 // Load environment variables
 dotenv.config();
 
@@ -22,13 +28,31 @@ app.use('/api/auth', authRoutes);
 app.use('/api/tasks', taskRoutes);
 
 // MongoDB connection
+/*
 mongoose.connect(process.env.MONGODB_URI)
     .then(() => console.log('MongoDB connected'))
     .catch(err => console.error('MongoDB connection error:', err));
+*/
 
-console.log("CHECKING PORT" + process.env.PORT);
+connectWithRetry();
 
 // Start the server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
 
+function connectWithRetry() {
+    mongoose.connect(process.env.MONGODB_URI)
+        .then(() => {
+            console.log('MongoDB is connected');
+        })
+        .catch((err) => {
+            console.error('MongoDB connection failed, retrying...', err);
+            setTimeout(connectWithRetry, 5000); // Retry after 5 seconds
+        });
+}
+
+/* mongodb://localhost:3000/ */
+
+/* mongodb+srv://currentUser:User19AtTaskMaster@taskmasteronline.iupp5.mongodb.net/ */
+
+/* 649e300f57db2ef3062067ea6d45606e58e2473797f33fbaa3755fbf451fe254ed4ff4a5ea8e264bd7164dca1473019b36653518d5e9c042a767c6008ed62759 */

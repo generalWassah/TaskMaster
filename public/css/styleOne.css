@@ -5,6 +5,11 @@
     box-sizing: border-box;
 }
 
+html,
+body {
+    height: 100%;
+}
+
 body {
     font-family: 'Arial', sans-serif;
     line-height: 1.6;
@@ -38,6 +43,16 @@ body {
 
 .header .nav a:hover {
     text-decoration: underline;
+}
+
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+main {
+    flex: 1;
 }
 
 /* Main Content */
