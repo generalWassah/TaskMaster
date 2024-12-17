@@ -49,30 +49,6 @@ router.post("/", verifyToken, async (req, res) => {
     }
 });
 
-/*
-// Update a task
-router.put('/:id', async (req, res) => {
-    try {
-        const taskId = req.params.id;
-        const updatedTask = await Task.findByIdAndUpdate(taskId, req.body, { new: true });
-        res.json(updatedTask);
-    } catch (error) {
-        res.status(400).json({ message: 'Error updating task', error });
-    }
-});
-
-// Delete a task
-router.delete('/:id', async (req, res) => {
-    try {
-        const taskId = req.params.id;
-        await Task.findByIdAndDelete(taskId);
-        res.json({ message: 'Task deleted successfully' });
-    } catch (error) {
-        res.status(400).json({ message: 'Error deleting task', error });
-    }
-});
-*/
-
 // Update a task
 router.put("/:id", verifyToken, async (req, res) => {
     try {

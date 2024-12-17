@@ -1,6 +1,29 @@
 
 const baseUrl = "http://localhost:3000/api/tasks";
 
+const isTokenExpired = (token) => {
+    if (!token) return true;
+    try {
+        const payload = JSON.parse(atob(token.split(".")[1]));
+        return payload.exp * 1000 <= Date.now();
+    } catch (e) {
+        console.error("Invalid token format:", e);
+        return true;
+    }
+};
+
+const ensureTokenValidity = () => {
+    const token = localStorage.getItem("token");
+    if (isTokenExpired(token)) {
+        alert("Session expired. Please log in again.");
+        localStorage.removeItem("token");
+        window.location.href = "login.html";
+        return null;
+    }
+    return token;
+};
+
+
 // Handle Registration
 document.getElementById('registerForm')?.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -9,10 +32,14 @@ document.getElementById('registerForm')?.addEventListener('submit', async (e) =>
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
 
+    // Normalize inputs
+    const normalizedUsername = username.toLowerCase();
+    const normalizedEmail = email.toLowerCase();
+
     const response = await fetch('/api/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, email, password }),
+        body: JSON.stringify({ normalizedUsername, normalizedEmail, password }),
     });
 
     const result = await response.json();
@@ -28,8 +55,10 @@ document.getElementById('registerForm')?.addEventListener('submit', async (e) =>
 document.getElementById('loginForm')?.addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    const email = document.getElementById('email').value;
+    const email = document.getElementById('email').value.toLowerCase();
     const password = document.getElementById('password').value;
+
+    // const normalizedEmail = email.toLowerCase();
 
     const response = await fetch('/api/auth/login', {
         method: 'POST',
@@ -56,7 +85,7 @@ logoutButton.addEventListener('click', () => {
     localStorage.removeItem('token');
 
     // Redirect to login page (adjust the path based on your project structure)
-    window.location.href = '/login.html';
+    window.location.href = 'login.html';
 });
 
 // Show update form (logic to be implemented)
@@ -90,6 +119,10 @@ applyFilters.addEventListener('click', async () => {
 
 // Function to fetch and display tasks
 async function fetchTasks() {
+
+    const token = ensureTokenValidity();
+    if (!token) return;
+
     try {
         const response = await fetch(baseUrl, {
             headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
@@ -128,7 +161,7 @@ form.addEventListener("submit", async (e) => {
     const description = document.getElementById("description").value;
     const deadline = document.getElementById("deadline").value;
     const priority = document.getElementById("priority").value;
-    const token = localStorage.getItem("token");
+    //const token = localStorage.getItem("token");
 
     // Validate input fields
     if (!title || !description || !deadline || !priority) {
@@ -136,25 +169,8 @@ form.addEventListener("submit", async (e) => {
         return;
     }
 
-    if (!token) {
-        alert("You are not logged in. Please log in and try again.");
-        return;
-    }
-
-    const isTokenExpired = (token) => {
-        const payload = JSON.parse(atob(token.split(".")[1]));
-        return payload.exp * 1000 <= Date.now(); // Compare exp in milliseconds
-    };
-
-    if (isTokenExpired(localStorage.getItem("token"))) {
-        alert("Session expired. Please log in again.");
-        // Clear token from localStorage
-        localStorage.removeItem('token');
-
-        // Redirect to login page (adjust the path based on your project structure)
-        window.location.href = '/login.html';
-    }
-
+    const token = ensureTokenValidity();
+    if (!token) return;
 
     try {
         const response = await fetch(baseUrl, {
@@ -180,6 +196,10 @@ form.addEventListener("submit", async (e) => {
 
 // Update Task
 async function updateTask(taskId, updatedData) {
+
+    const token = ensureTokenValidity();
+    if (!token) return;
+
     try {
         const response = await fetch(`${baseUrl}/${taskId}`, {
             method: "PUT",
@@ -201,6 +221,10 @@ async function updateTask(taskId, updatedData) {
 
 // Delete Task
 async function deleteTask(taskId) {
+
+    const token = ensureTokenValidity();
+    if (!token) return;
+
     try {
         const response = await fetch(`${baseUrl}/${taskId}`, {
             method: "DELETE",
