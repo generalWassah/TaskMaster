@@ -31,8 +31,12 @@ mongoose.connect(process.env.MONGODB_URI)
 connectWithRetry();
 
 // Start the server
+const deploymentUrl = process.env.DEPLOYMENT_URL || "http://localhost:3000";
+
+//console.log("App is running at:", deploymentUrl);
+
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
+app.listen(PORT, () => console.log(`Server running on ${deploymentUrl}:${PORT}`));
 
 function connectWithRetry() {
     mongoose.connect(process.env.MONGODB_URI)
