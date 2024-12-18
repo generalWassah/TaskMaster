@@ -21,13 +21,6 @@ const taskRoutes = require('./routes/tasks');
 app.use('/api/auth', authRoutes);
 app.use('/api/tasks', taskRoutes);
 
-// MongoDB connection
-/*
-mongoose.connect(process.env.MONGODB_URI)
-    .then(() => console.log('MongoDB connected'))
-    .catch(err => console.error('MongoDB connection error:', err));
-*/
-
 connectWithRetry();
 
 // Start the server
@@ -49,8 +42,3 @@ function connectWithRetry() {
         });
 }
 
-/* mongodb://localhost:3000/ */
-
-/* mongodb+srv://currentUser:User19AtTaskMaster@taskmasteronline.iupp5.mongodb.net/ */
-
-/* 649e300f57db2ef3062067ea6d45606e58e2473797f33fbaa3755fbf451fe254ed4ff4a5ea8e264bd7164dca1473019b36653518d5e9c042a767c6008ed62759 */
