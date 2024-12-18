@@ -1,5 +1,4 @@
-
-const baseUrl = "http://localhost:3000/api/tasks";
+const apiBaseUrl = process.env.DEPLOYMENT_URL || "http://localhost:3000";
 
 const isTokenExpired = (token) => {
     if (!token) return true;
@@ -36,7 +35,7 @@ document.getElementById('registerForm')?.addEventListener('submit', async (e) =>
     const normalizedUsername = username.toLowerCase();
     const normalizedEmail = email.toLowerCase();
 
-    const response = await fetch('/api/auth/register', {
+    const response = await fetch(`${apiBaseUrl}/api/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ normalizedUsername, normalizedEmail, password }),
@@ -60,7 +59,7 @@ document.getElementById('loginForm')?.addEventListener('submit', async (e) => {
 
     // const normalizedEmail = email.toLowerCase();
 
-    const response = await fetch('/api/auth/login', {
+    const response = await fetch(`${apiBaseUrl}/api/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
@@ -100,9 +99,12 @@ applyFilters.addEventListener('click', async () => {
     const priorityFilter = filterPriority.value;
     const dateFilter = filterDate.value;
 
+    const token = ensureTokenValidity();
+    if (!token) return;
+
     try {
-        const response = await fetch(baseUrl, {
-            headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+        const response = await fetch(`${apiBaseUrl}/api/tasks`, {
+            headers: { Authorization: `Bearer ${token}` }
         });
         const tasks = await response.json();
         const filteredTasks = tasks.filter((task) => {
@@ -124,8 +126,8 @@ async function fetchTasks() {
     if (!token) return;
 
     try {
-        const response = await fetch(baseUrl, {
-            headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        const response = await fetch(`${apiBaseUrl}/api/tasks`, {
+            headers: { Authorization: `Bearer ${token}` },
         });
         const tasks = await response.json();
         const tasksContainer = document.getElementById("tasks");
@@ -173,11 +175,11 @@ form.addEventListener("submit", async (e) => {
     if (!token) return;
 
     try {
-        const response = await fetch(baseUrl, {
+        const response = await fetch(`${apiBaseUrl}/api/tasks`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                Authorization: `Bearer ${localStorage.getItem("token")}`,
+                Authorization: `Bearer ${token}`,
             },
             body: JSON.stringify({ title, description, priority, deadline }),
         });
@@ -201,11 +203,11 @@ async function updateTask(taskId, updatedData) {
     if (!token) return;
 
     try {
-        const response = await fetch(`${baseUrl}/${taskId}`, {
+        const response = await fetch(`${apiBaseUrl}/api/tasks/${taskId}`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
-                Authorization: `Bearer ${localStorage.getItem("token")}`,
+                Authorization: `Bearer ${token}`,
             },
             body: JSON.stringify(updatedData),
         });
@@ -226,9 +228,9 @@ async function deleteTask(taskId) {
     if (!token) return;
 
     try {
-        const response = await fetch(`${baseUrl}/${taskId}`, {
+        const response = await fetch(`${apiBaseUrl}/api/tasks/${taskId}`, {
             method: "DELETE",
-            headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+            headers: { Authorization: `Bearer ${token}` },
         });
         if (response.ok) {
             fetchTasks();
