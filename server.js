@@ -24,7 +24,7 @@ app.use('/api/tasks', taskRoutes);
 connectWithRetry();
 
 // Start the server
-const deploymentUrl = process.env.DEPLOYMENT_URL || "http://localhost:3000";
+const deploymentUrl = process.env.VITE_API_BASE_URL || "http://localhost";
 
 //console.log("App is running at:", deploymentUrl);
 

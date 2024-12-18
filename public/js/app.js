@@ -1,4 +1,6 @@
-const apiBaseUrl = process.env.DEPLOYMENT_URL || "http://localhost:3000";
+// checks checks checks
+const apiBaseUrl = "https://taskmaster-gbm3.onrender.com" || "http://localhost:3000";
+
 
 const isTokenExpired = (token) => {
     if (!token) return true;
@@ -6,8 +8,8 @@ const isTokenExpired = (token) => {
         const payload = JSON.parse(atob(token.split(".")[1]));
         return payload.exp * 1000 <= Date.now();
     } catch (e) {
-        console.error("Invalid token format:", e);
-        return true;
+        console.warn("Invalid token format:", e);
+        return true; // Treat invalid token as expired
     }
 };
 
@@ -27,18 +29,14 @@ const ensureTokenValidity = () => {
 document.getElementById('registerForm')?.addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    const username = document.getElementById('username').value;
-    const email = document.getElementById('email').value;
+    const username = document.getElementById('username').value.toLowerCase();
+    const email = document.getElementById('email').value.toLowerCase();
     const password = document.getElementById('password').value;
-
-    // Normalize inputs
-    const normalizedUsername = username.toLowerCase();
-    const normalizedEmail = email.toLowerCase();
 
     const response = await fetch(`${apiBaseUrl}/api/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ normalizedUsername, normalizedEmail, password }),
+        body: JSON.stringify({ username, email, password }),
     });
 
     const result = await response.json();
