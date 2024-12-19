@@ -16,7 +16,7 @@ const isTokenExpired = (token) => {
 const ensureTokenValidity = () => {
     const token = localStorage.getItem("token");
     if (isTokenExpired(token)) {
-        alert("Session expired. Please log in again.");
+        // alert("Session expired. Please log in again.");
         localStorage.removeItem("token");
         window.location.href = "login.html";
         return null;
@@ -186,7 +186,7 @@ form.addEventListener("submit", async (e) => {
             fetchTasks(); // Refresh tasks
             form.reset();
         } else {
-            alert("Error adding task tested");
+            alert("Error adding task");
             console.error("Error adding task:", await response.text());
         }
     } catch (error) {
